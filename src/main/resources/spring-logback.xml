@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <!--
+        Appender 영역 : 로그 형태설정, 어떤 방법으로 출력할지 정함
+        -ConsoleAppender : 콘솔에 로그 출력
+        -FileAppender : 파일에 로그 저장
+        -RollingFileAppender : 여러 개의 파일을 순회하며 로그를 저장
+        -SMTPAppender : 메일로 로그 전송
+        -DBAppender : 데이터베이스에 로그 저장
+    -->
+    <property name="LOG_PATH" value="./logs"/>
+
+    <!--Appenders-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] %logger %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="console" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <file>${LOG_PATH}/info.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/info_${type}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] %logger %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--TRACE > DEBUG > INFO > WARN > ERROR > OFF -->
+    <!-- Root Logger-->
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="INFO_LOG"/>
+    </root>
+</configuration>
