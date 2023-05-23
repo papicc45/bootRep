@@ -2,9 +2,11 @@ package com.springboot.hello.service.impl;
 
 import com.springboot.hello.data.dao.ProductDAO;
 import com.springboot.hello.data.entity.Product;
+import com.springboot.hello.data.repository.ProductRepository;
 import com.springboot.hello.dto.ProductDTO;
 import com.springboot.hello.dto.ProductResponseDTO;
 import com.springboot.hello.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductDAO productDAO;
+
 
     public ProductServiceImpl(ProductDAO productDAO) {
         this.productDAO = productDAO;
