@@ -1,8 +1,12 @@
 package com.springboot.hello.data.repository;
 
 import com.springboot.hello.data.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,4 +73,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByNameOrderByPriceAscStockDesc(String name);
 
     List<Product> findByName(String name, Sort sort);
+
+    Page<Product> findByName(String name, Pageable pageable);
+
+    @Query("SELECT p FROM Product AS p WHERE p.name = ?1")   //직접 쿼리 작성, ?1은 인자(첫번째 파라미터)
+    List<Product> findByName(String name);
+
+    @Query("SELECT p FROM Product p WHERE p.name = :name")
+    List<Product> findByNameParam(@Param("name") String name);   //파라미터 순서에 상관없이 사용하기 위해 @Param 사용
+
+    @Query("SELECT p.name, p.price, p.stock FROM Product p WHERE p.name = :name")  //원하는 칼럼값만 추출
+    List<Object[]> findByNameParam2(@Param("name") String name);
 }
