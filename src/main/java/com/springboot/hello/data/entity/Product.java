@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @Builder
-@EqualsAndHashCode
-public class Product {
+@EqualsAndHashCode(callSuper = true) //callSuper - 부모클래스의 필드를 포함
+public class Product extends BaseEntity{
 
     @Id         //테이블 기본값
     @GeneratedValue(strategy = GenerationType.IDENTITY)     //기본값 생성을 db에 위임
@@ -29,8 +29,13 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @OneToOne(mappedBy = "product")  //일대일 양방향 매핑, mappedBy 사용 시 Product 테이블에 ProductDetail 왜래키가 사라짐(객체주인 표시)
+    @ToString.Exclude // StackOverFlowError 순환참조 방지
+    private ProductDetail productDetail;
 
+    @ManyToOne
+    @JoinColumn(name = "provider_id")
+    @ToString.Exclude
+    private Provider provider;
     //@Transient - 선언되있는 필드지만 db에서는 필요가 없을 때 사용
 }
