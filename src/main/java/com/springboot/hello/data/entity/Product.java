@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity                 //엔티티 명시
 @Table(name = "product")  //명시하지 않으면 클래스명과 테이블명이 동일
@@ -37,5 +39,13 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "provider_id")
     @ToString.Exclude
     private Provider provider;
+
+    @ManyToMany
+    @ToString.Exclude
+    private List<Producer> producers = new ArrayList<>();
+
+    public void addProducer(Producer producer) {
+        this.producers.add(producer);
+    }
     //@Transient - 선언되있는 필드지만 db에서는 필요가 없을 때 사용
 }

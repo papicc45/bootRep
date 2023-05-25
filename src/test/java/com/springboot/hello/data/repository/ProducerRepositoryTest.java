@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 
 @SpringBootTest
 public class ProducerRepositoryTest {
@@ -27,9 +28,8 @@ public class ProducerRepositoryTest {
 
         Producer producer1 = savedProducer("flature");
         Producer producer2 = savedProducer("wikibooks");
-
-        System.out.println(product1);
-        System.out.println(producer1);
+        producer1.setProducts(new ArrayList<>());
+        producer2.setProducts(new ArrayList<>());
 
         producer1.addProduct(product1);
         producer1.addProduct(product2);
@@ -52,5 +52,38 @@ public class ProducerRepositoryTest {
         Producer producer = Producer.builder().name(name).build();
 
         return producerRepository.save(producer);
+    }
+
+    @Test
+    @Transactional
+    void relationshipTest2() {
+        Product product1 = savedProduct("동글펜", 500, 1000);
+        Product product2 = savedProduct("네모 공책", 100, 2000);
+        Product product3 = savedProduct("지우개", 152, 1234);
+        product1.setProducers(new ArrayList<>());
+        product2.setProducers(new ArrayList<>());
+        product3.setProducers(new ArrayList<>());
+
+        Producer producer1 = savedProducer("flature");
+        Producer producer2 = savedProducer("wikibooks");
+        producer1.setProducts(new ArrayList<>());
+        producer2.setProducts(new ArrayList<>());
+
+        producer1.addProduct(product1);
+        producer1.addProduct(product2);
+
+        producer2.addProduct(product2);
+        producer2.addProduct(product3);
+
+        product1.addProducer(producer1);
+        product2.addProducer(producer1);
+        product2.addProducer(producer2);
+        product3.addProducer(producer2);
+
+        producerRepository.saveAll(Lists.newArrayList(producer1, producer2));
+        productRepository.saveAll(Lists.newArrayList(product1, product2, product3));
+
+        System.out.println("products : " + producerRepository.findById(1L).get().getProducts());
+        System.out.println("producers : "  + productRepository.findById(2L).get().getProducers());
     }
 }
