@@ -7,6 +7,7 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
+@Builder
 public class MemberDTO {
     private String name;
     private String email;

@@ -1,6 +1,7 @@
 package com.springboot.hello.dto;
 
 
+import com.springboot.hello.config.annotation.Telephone;
 import com.springboot.hello.data.group.ValidationGroup1;
 import com.springboot.hello.data.group.ValidationGroup2;
 import lombok.*;
@@ -20,7 +21,8 @@ public class ValidRequestDTO {
     @Email
     String email;
 
-    @Pattern(regexp = "01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$")
+    //@Pattern(regexp = "01(?:0|1|[6-9])[.-]?(\\\\d{3}|\\d{4})[.-]?(\\\\d{4})$")
+   @Telephone
     String phoneNumber;
 
     @Min(value = 20, groups = ValidationGroup1.class) @Max(value = 40, groups = ValidationGroup2.class)

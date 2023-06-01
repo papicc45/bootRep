@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.Validation;
 
 @RestController
 @RequestMapping("/validation")
@@ -27,7 +28,7 @@ public class ValidationController {
         return ResponseEntity.status(HttpStatus.OK).body(validRequestDTO.toString());
     }
 
-    @PostMapping("/validated")
+    @PostMapping("/validated") //@Validated 특정 그룹 지정하지 않을 경우 groups 속성을 설정하지 않은 필드에 대해서만 유효성 검사
     public ResponseEntity<String> checkValidation(@Validated @RequestBody ValidRequestDTO validRequestDTO) {
         LOGGER.info(validRequestDTO.toString());
         return ResponseEntity.status(HttpStatus.OK).body(validRequestDTO.toString());
@@ -45,4 +46,10 @@ public class ValidationController {
         return ResponseEntity.status(HttpStatus.OK).body(validRequestDTO.toString());
     }
 
+    @PostMapping("/validated/all-group")
+    public ResponseEntity<String> checkValidation3(@Validated({ValidationGroup1.class, ValidationGroup2.class}) @RequestBody ValidRequestDTO validRequestDTO) {
+        LOGGER.info(validRequestDTO.toString());
+
+        return ResponseEntity.status(HttpStatus.OK).body(validRequestDTO.toString());
+    }
 }
