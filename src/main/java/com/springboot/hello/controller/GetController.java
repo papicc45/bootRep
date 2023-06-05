@@ -1,6 +1,7 @@
 package com.springboot.hello.controller;
 
 
+
 import com.springboot.hello.dto.MemberDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
+import org.springframework.ui.Model;
 
 @RestController
 @RequestMapping("/api/v1/get-api")
@@ -33,9 +34,10 @@ public class GetController {
 
     //PathVariable을 활용한 매개변수를 가지는 GET 메서드
     @GetMapping(value = "/variable1/{variable}")
-    public String getVariable1(@PathVariable String variable) {
+    public String getVariable1(@PathVariable String variable, Model model) {
         LOGGER.info("들어온 값 : {} ", variable);
-        return variable;
+        model.addAttribute("variable", variable);
+        return "greeting";
     }
 
     //PathVariable 변수명 매핑
