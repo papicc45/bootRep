@@ -8,6 +8,7 @@ import com.springboot.hello.config.QueryDSLConfiguration;
 import com.springboot.hello.data.entity.Product;
 import com.springboot.hello.data.entity.QProduct;
 import org.hibernate.tuple.Tuplizer;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -23,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -181,5 +183,46 @@ public class ProductRepositoryTest {
 
         System.out.println(savedProduct.getName());
         System.out.println(savedProduct.getCreatedAt());
+    }
+
+    @BeforeEach
+    void generateData() {
+        int count = 1;
+
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count++)).price(2000).stock(3000).build());
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count++)).price(3000).stock(9000).build());
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count--)).price(1500).stock(200).build());
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count++)).price(10000).stock(5000).build());
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count++)).price(4000).stock(1500).build());
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count++)).price(1000).stock(1001).build());
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count++)).price(500).stock(10000).build());
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count++)).price(8500).stock(3500).build());
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count++)).price(7200).stock(2000).build());
+        productRepository.save(Product.builder().name("상품" + Integer.toString(count++)).price(5100).stock(1700).build());
+
+    }
+
+
+
+    @Test
+    void findTest() {
+        List<Product>foundAll = productRepository.findAll();
+        System.out.println("**** test data ****");
+        for(Product p : foundAll) {
+            System.out.println(p.toString());
+        }
+
+        System.out.println("**** test data ****");
+
+        List<Product> foundByNameList = productRepository.findByName("상품3");
+        for(Product p : foundByNameList) {
+            System.out.println(p.toString());
+        }
+
+    }
+
+    @Test
+    void existTest() {
+        System.out.println(productRepository.existsByName("상품5"));
     }
 }

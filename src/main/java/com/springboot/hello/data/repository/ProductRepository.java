@@ -17,6 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Product queryByNumber(Long number);
 
     boolean existsByNumber(Long number);
+    boolean existsByName(String name);
     long countByName(String name);
 
     void deleteByNumber(Long number);
