@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -224,5 +225,57 @@ public class ProductRepositoryTest {
     @Test
     void existTest() {
         System.out.println(productRepository.existsByName("상품5"));
+        System.out.println(productRepository.countByName("상품3"));
     }
+
+    @Test
+    @Transactional
+    void deleteTest() {
+        System.out.println(productRepository.count());
+
+        productRepository.deleteByNumber(1L);
+        productRepository.deleteByNumber(7L);
+
+        System.out.println(productRepository.count());
+    }
+
+    @Test
+    void topTest() {
+        for(int i=0 ; i<10 ; i++) {
+            productRepository.save(Product.builder().name("상품").price(i * 1000).stock(i * 25).build());
+        }
+        List<Product> foundTopList = productRepository.findFirst5ByName("상품");
+        for(Product p : foundTopList) {
+            System.out.println(p.toString());
+        }
+    }
+
+    @Test
+    void otherTest() {
+        for(int i=0 ; i<10 ; i++) {
+            productRepository.save(Product.builder().name("상품").price(i * 1000).stock(i * 25).build());
+        }
+
+        List<Product> list = productRepository.findByNameContaining("상품", Sort.by(Sort.Order.asc("price")));
+        for(Product p : list) {
+            System.out.println(p.toString());
+        }
+
+        System.out.println("=========================]");
+        List<Product> pageList = productRepository.findByPriceGreaterThan(3000, PageRequest.of(4, 2));
+        for(Product p : pageList) {
+            System.out.println(p.toString());
+        }
+
+        System.out.println("========================");
+        List<Object[]> paramList = productRepository.findByNameContainingParam3("상품", 3000);
+        for(Object[] o : paramList) {
+            for(int i=0 ; i<o.length ; i++) {
+                System.out.print(o[i] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+
 }

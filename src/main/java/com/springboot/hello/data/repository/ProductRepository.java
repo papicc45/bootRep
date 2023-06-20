@@ -77,6 +77,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByName(String name, Pageable pageable);
 
+    List<Product> findByNameContainingOrderByStockAsc(String name);
+    List<Product> findByNameContainingOrderByStockDesc(String name);
+    List<Product> findByNameContainingOrderByStockDescPriceAsc(String name);
+
+    List<Product> findByNameContaining(String name, Sort sort);
+
+    List<Product> findByPriceGreaterThan(Integer price, Pageable pageable);
+    List<Product> findByNameIsContaining(String name, Pageable pageable);
+
     @Query("SELECT p FROM Product AS p WHERE p.name = ?1")   //직접 쿼리 작성, ?1은 인자(첫번째 파라미터)
     List<Product> findByName(String name);
 
@@ -85,4 +94,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p.name, p.price, p.stock FROM Product p WHERE p.name = :name")  //원하는 칼럼값만 추출
     List<Object[]> findByNameParam2(@Param("name") String name);
+
+    @Query("SELECT p.name, p.price FROM Product p WHERE p.name like %:name% and p.price <= :price") //nativeQuery 속성값 true로 하면 네이티브쿼리 사용가능
+    List<Object[]> findByNameContainingParam3(@Param("name") String name, @Param("price") Integer price);
+
 }
